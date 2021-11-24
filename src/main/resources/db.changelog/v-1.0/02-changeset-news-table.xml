@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet  author="bek_dev"  id="2">
+        <createTable tableName="news">
+            <column  name="id" autoIncrement="true"  type="bigint">
+                <constraints nullable="false"  primaryKey="true"  unique="true"/>
+            </column>
+            <column  name="approve"  type="boolean" />
+            <column  name="approve_date"  type="timestamp" />
+            <column  name="create_at"  type="timestamp" />
+            <column  name="reject"  type="boolean" />
+            <column  name="text"  type="VARCHAR(2048)" />
+            <column  name="title"  type="VARCHAR(255)" />
+            <column  name="update_at"  type="timestamp" />
+            <column  name="news_owner_id"  type="bigint">
+                <constraints foreignKeyName="fk_user_id" referencedTableName="users" referencedColumnNames="id"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

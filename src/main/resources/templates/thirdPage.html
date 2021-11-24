@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign In</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css}">
+</head>
+<body>
+<h1 th:text="${add} ? 'Create a News:' : 'Edit a News:'" />
+<br/><br/>
+<form th:action="${add} ?  @{/addNews/{userId}(userId=${user.getId()})} : @{/edit/{newsId}(newsId=${news.getId()})}"
+      th:object="${newsDto}" method="POST">
+    <table border="0">
+        <tr>
+            <td>Title</td>
+            <td>:</td>
+            <td><label>
+                <textarea th:for="title" name="title" length="50" th:field="*{title}" th:text="${add} ? '' : ${newsDto.getTitle()}" rows="2" cols="50"></textarea>
+            </label></td>
+        </tr>
+        <tr>
+            <td>Text</td>
+            <td>:</td>
+            <td><label>
+                <textarea th:for="text" name="text" length="500"  th:field="*{text}" th:text="${add} ? '' : ${newsDto.getText()}" rows="10" cols="50"></textarea>
+            </label></td>
+        </tr>
+    </table>
+    <p class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+    <p class="text-danger" th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></p>
+    <input type="submit" th:value="${add} ? 'Create' : 'Update'" />
+    <button type="button" class="btn btn-danger"><a th:href="@{/getNews/{userId}(userId=${user.getId()})}" >Cancel</a></button>
+</form>
+</body>
+</html>

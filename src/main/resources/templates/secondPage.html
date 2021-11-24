@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container mt-5 pt-5">
+    <div class="row mt-4">
+        <div class="col-md-4 offset-4 border border-primary py-2 pl-5">
+            <form th:action="@{/signUp}" method="post" th:object="${userDto}">
+                <h4 class="font-weight-bold text-center mr-5 mt-3">Register</h4>
+                <div class="form-group ml-3">
+                    <label class="font-weight-bold mt-3 mb-2" for="login">Enter login</label>
+                    <input th:field="*{login}" type="text" name="login" class="form-control w-75 border-primary" placeholder="Enter login" id="login">
+                    <p class="text-danger" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></p>
+                    <label class="font-weight-bold mt-3 mb-2" for="password">Enter password</label>
+                    <input th:field="*{password}" type="password" name="password" class="form-control w-75 border-primary" placeholder="Enter password" id="password">
+                    <p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                    <label class="font-weight-bold mt-3 mb-2" for="email">Enter email</label>
+                    <input th:field="*{email}" type="email" name="email" class="form-control w-75 border-primary" placeholder="Enter email" id="email">
+                    <p class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                    <label class="font-weight-bold mt-3 mb-2" for="age">Enter age</label>
+                    <input th:field="*{age}" type="text" name="age" class="form-control w-75 border-primary" placeholder="Enter age" id="age">
+                    <p class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></p>
+                </div>
+                <p class="text-danger" th:if="${error}">Login  already exist</p>
+                <div class=" btn-group ml-4 my-2">
+                    <button type="submit" class="btn btn-success mx-3">Sign Up</button>
+                    <button type="button" class="btn btn-danger"><a th:href="@{/}" >Cancel</a></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

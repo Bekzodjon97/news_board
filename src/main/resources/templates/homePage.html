@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container ">
+    <div class="row">
+        <div class="col-md-12">
+            <nav  class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #0971d7; border-radius: 10px">
+                <h4><a class="navbar-brand" href="#">News</a></h4>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li th:if="${user.getRoleName().name().equals('ADMINISTRATOR')}" class="nav-item">
+                            <a class="nav-link" th:href="@{/unconfirmed/{userId}(userId=${user.getId()})}">Unconfirmed News</a>
+                        </li>
+                        <li  class="nav-item">
+                            <a class="nav-link" th:href="@{/getNews/{userId}(userId=${user.getId()})}">All News</a>
+                        </li>
+                        <li th:unless="${user.getRoleName().name().equals('ADMINISTRATOR')}" class="nav-item">
+                            <a class="nav-link" th:href="@{/myNews/{userId}(userId=${user.getId()})}">My News</a>
+                        </li>
+                        <li th:unless="${user.getRoleName().name().equals('ADMINISTRATOR')}" class="nav-item">
+                            <a class="nav-link" th:href="@{/addNews/{userId}(userId=${user.getId()})}">Add News</a>
+                        </li>
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <p class="text-black" th:text="${user.getLogin()}"></p>
+                        <button class="btn btn-outline-success my-2 my-sm-0" ><a th:href="@{/}">Log out</a></button>
+                    </form>
+                </div>
+            </nav>
+            <hr>
+            <hr>
+            <div th:switch="${user.getRoleName().name()}">
+                <div th:case="ADMINISTRATOR">
+                    <table class="table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">&nbsp;News Title</th>
+                            <th scope="col">Text</th>
+                            <th scope="col">Author Login</th>
+                            <th scope="col">Author Email</th>
+                            <th scope="col">Created At</th>
+                            <th scope="col" th:if="${approved}">Action</th>
+                            <th scope="col" th:unless="${approved}">Approved Date</th>
+                        </tr>
+                        </thead>
+                        <tbody th:each="news: ${newsList}">
+                        <tr>
+                            <td scope="row" th:text="${news.getTitle()}"></td>
+                            <td th:text="${news.getText()}"></td>
+                            <td th:text="${news.getNewsOwner().getLogin()}"></td>
+                            <td th:text="${news.getNewsOwner().getEmail()}"></td>
+                            <td th:text="${news.getCreateAt()}"></td>
+                            <td th:if="${approved}">
+                                <button><a
+                                        th:href="@{/approve/{newsId}/{userId}(newsId=${news.getId()}, userId=${user.getId()})}">Approve</a>
+                                </button>
+                                <button><a
+                                        th:href="@{/reject/{newsId}/{userId}(newsId=${news.getId()}, userId=${user.getId()})}">Reject</a>
+                                </button>
+                            </td>
+                            <td th:unless="${approved}" th:text="${news.getApproveDate()}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:case="USER" class="card" id="posts">
+                    <div th:each="news: ${newsList}">
+                        <div class="card-header" data-toggle="collapse" data-target="#cardOne">
+                            <h5 class="text-info" th:text="${news.getTitle()}"></h5>
+                            <p style="font-size: 20px;" th:text="${news.getText()}"></p>
+                        </div>
+                        <div th:if="${myNews}">
+                            <button><a th:href="@{/edit/{newsId}(newsId=${news.getId()})}">Edit</a></button>
+                            <button><a
+                                    th:href="@{/delete/{newsId}/{userId}(newsId=${news.getId()}, userId=${user.getId()})}">Delete</a>
+                            </button>
+                            <p th:text="${news.isApprove()} ? '<<APPROVED>>' : '<<UNAPPROVED>>'"></p>
+                            <p th:text="${news.isReject()} ? '<<REJECTED>>' : '<<NOT REJECTED>>'"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center" th:if="${myNews}">
+                <nobr>
+        <span th:if="${hasPrev}"><a
+                th:href="@{/news/{page}/{userId}/{myNews}(page=${prev}, userId=${user.getId()}, myNews=${myNews})}">Prev</a>&nbsp;&nbsp;&nbsp;</span>
+                    <span th:if="${hasNext}"><a
+                            th:href="@{/news/{page}/{userId}/{myNews}(page=${next}, userId=${user.getId()}, myNews=${myNews})}">Next</a></span>
+                </nobr>
+            </div>
+            <div style="text-align: center" th:unless="${myNews}">
+                <nobr>
+        <span th:if="${hasPrev}"><a
+                th:href="@{/news/{page}/{userId}/{myNews}(page=${prev}, userId=${user.getId()}, myNews=false)}">Prev</a>&nbsp;&nbsp;&nbsp;</span>
+                    <span th:if="${hasNext}"><a
+                            th:href="@{/news/{page}/{userId}/{myNews}(page=${next}, userId=${user.getId()}, myNews=false)}">Next</a></span>
+                </nobr>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{/webjars/bootstrap/4.0.0-2/js/jQuery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-2/js/popper.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-2/js/bootstrap.js}"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>
